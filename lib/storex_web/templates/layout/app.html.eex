@@ -12,6 +12,26 @@
   <body>
     <nav class="main-nav">
       <a class="main-nav__logo" href="/"></a>
+      <ul class="main-nav__links">
+        <%= if @current_user do %>
+          <%= if @is_admin do %>
+            <li><%= link "New Book", to: book_path(@conn, :new) %>
+          <% end %>
+          <li><%= @current_user.full_name %></li>
+          <li><%= link "sign out", to: session_path(@conn, :delete), method: :delete %></li>
+        <% else %>
+          <li><%= link "sign up", to: user_path(@conn, :new) %></li>
+          <li><%= link "sign in", to: session_path(@conn, :new) %></li>
+        <% end %>
+
+        <%= if @current_user && items_count(@conn) do %>
+          <li>
+            <%= link to: cart_path(@conn, :show) do %>
+              cart <span class="badge"><%= items_count(@conn) %> items: <%= format_price(items_total_price(@conn)) %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
     </nav>
 
     <main class="content">

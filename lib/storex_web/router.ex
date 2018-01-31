@@ -7,6 +7,10 @@ defmodule StorexWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug StorexWeb.Plugs.Cart
+    plug StorexWeb.Plugs.ItemsCount
+    plug StorexWeb.Plugs.ItemsTotalPrice
+    plug StorexWeb.Plugs.CurrentUser
   end
 
   pipeline :api do
@@ -17,7 +21,12 @@ defmodule StorexWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", BookController, :index
-    get "/books/:id", BookController, :show
+
+    resources "/books", BookController
+    resources "/carts", CartController, singleton: true, only: [:show, :create, :delete]
+    resources "/users", UserController, only: [:new, :create]
+    resources "/sessions", SessionController, singleton: true, only: [:new, :create, :delete]
+    resources "/checkout", CheckoutController, only: [:new, :create]
   end
 
   # Other scopes may use custom stacks.

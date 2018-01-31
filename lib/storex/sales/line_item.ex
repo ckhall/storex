@@ -5,9 +5,10 @@ defmodule Storex.Sales.LineItem do
 
 
   schema "sales_line_items" do
-    field :quantity, :integer
     belongs_to :cart, Storex.Sales.Cart
+    belongs_to :order, Storex.Sales.Order
     belongs_to :book, Storex.Store.Book
+    field :quantity, :integer
     timestamps()
   end
 
